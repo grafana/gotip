@@ -31,7 +31,7 @@ jobs:
         run: |
           set -x
           cd $HOME/sdk/
-          zip -r $HOME/go.zip gotip
+          zip -r $GITHUB_WORKSPACE/go.zip gotip
       - name: Release
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
@@ -39,4 +39,4 @@ jobs:
           automatic_release_tag: "${{ matrix.platform }}"
           prerelease: false
           files: |
-            $HOME/go.zip
+            go.zip
