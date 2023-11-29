@@ -11,9 +11,12 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ ubuntu-latest, windows-latest ]
+        platform: [ ubuntu-latest, windows-latest, windows-2019 ]
     runs-on: ${{ matrix.platform }}
     steps:
+      - name: Install zip
+        if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2019'
+        run: powershell.exe -Command "choco install zip"
       - name: Install Go
         uses: actions/setup-go@v4
         with:
@@ -27,11 +30,13 @@ jobs:
       - name: Zip Go installation
         run: |
           set -x
-          zip -r go.zip $HOME/sdk/gotip
+          cd $HOME/sdk/
+          zip -r $HOME/go.zip gotip
       - name: Release
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ matrix.platform }}"
+          prerelease: false
           files: |
-            go.zip
+            $HOME/go.zip
