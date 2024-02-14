@@ -10,11 +10,11 @@ defaults:
     shell: bash
 
 jobs:
-  release:
+  build:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ ubuntu-latest, windows-latest, windows-2019, macos-latest]
+        platform: [ ubuntu-latest, windows-latest, windows-2019, macos-latest ]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Install zip
@@ -35,6 +35,50 @@ jobs:
           set -x
           cd $HOME/sdk/
           zip -r $GITHUB_WORKSPACE/go.zip gotip
+      - name: Upload Go tip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-zip-${{ matrix.platform }}
+          path: $GITHUB_WORKSPACE/go.zip
+
+  test:
+    needs: build
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [ ubuntu-latest, windows-latest, windows-2019, macos-latest ]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Download Go tip artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: go-zip-${{ matrix.platform }}
+      - name: Install Go tip
+        run: |
+          set -x
+          unzip go.zip -d $HOME/sdk
+          echo "GOROOT=$HOME/sdk/gotip" >> "$GITHUB_ENV"
+          echo "GOPATH=$HOME/go" >> "$GITHUB_ENV"
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+          echo "$HOME/sdk/gotip/bin" >> "$GITHUB_PATH"
+      - name: Test Go
+        run: |
+          set -x
+          which go
+          go version
+
+  release:
+    needs: test
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [ ubuntu-latest, windows-latest, windows-2019, macos-latest ]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Download Go tip artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: go-zip-${{ matrix.platform }}
       - name: Release
         uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0 # v1.2.1
         with:
