@@ -39,7 +39,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: go-zip-${{ matrix.platform }}
-          path: $GITHUB_WORKSPACE/go.zip
+          path: ${{ github.workspace }}/go.zip
+          if-no-files-found: error
 
   test:
     needs: build
