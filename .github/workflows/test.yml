@@ -36,5 +36,11 @@ jobs:
       - name: Test Go
         run: |
           set -x
+          echo "$PATH"
           which go
-          go version
+          go_version_output=$(go version)
+          echo "$go_version_output"
+          if ! echo "$go_version_output" | grep -q "go version devel"; then
+            echo "Go version is not devel"
+            exit 1
+          fi

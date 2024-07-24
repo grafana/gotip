@@ -65,12 +65,12 @@ jobs:
       - name: Test Go
         run: |
           set -x
-          echo $GITHUB_ENV
-          echo $GITHUB_PATH
+          echo "$PATH"
           which go
-          go version
-          if ! which go | grep -q "$HOME"; then
-            echo "Go binary is not installed in $HOME"
+          go_version_output=$(go version)
+          echo "$go_version_output"
+          if ! echo "$go_version_output" | grep -q "go version devel"; then
+            echo "Go version is not devel"
             exit 1
           fi
 
