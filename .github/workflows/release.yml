@@ -65,8 +65,14 @@ jobs:
       - name: Test Go
         run: |
           set -x
+          echo $GITHUB_ENV
+          echo $GITHUB_PATH
           which go
           go version
+          if ! which go | grep -q "$HOME"; then
+            echo "Go binary is not installed in $HOME"
+            exit 1
+          fi
 
   release:
     needs: test
