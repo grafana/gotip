@@ -20,6 +20,13 @@ jobs:
       - name: Install zip
         if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2019'
         run: powershell.exe -Command "choco install zip"
+      - name: Remove the default Go installation
+        if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2019'
+        shell: pwsh
+        run: |
+          $go_path = (Get-Command go).Source
+          Write-Host "Removing Go executable from: $go_path"
+          Remove-Item -Force $go_path
       - name: Install Go
         uses: actions/setup-go@v5
         with:
