@@ -35,8 +35,34 @@ jobs:
       - name: Install Go tip
         run: |
           set -x
-          go install golang.org/dl/gotip@latest
-          gotip download
+          
+          # Set up some control variables
+          MAX_RETRIES=2
+          RETRY_COUNT=0
+          SUCCESS=0
+
+          while [ $RETRY_COUNT -le $MAX_RETRIES ]; do
+            # Run the command and capture both stdout and stderr
+            OUTPUT=$( { go install golang.org/dl/gotip@latest && gotip download; } 2>&1 )
+          
+            # We still want to see the output as part of the job output
+            echo "$OUTPUT"
+            
+            # Check if the error "exit status 1" is present in the output
+            if echo "$OUTPUT" | grep -q "exit status 1"; then
+              echo "Detected 'exit status 1' error, retrying... ($((RETRY_COUNT+1))/$MAX_RETRIES)"
+              RETRY_COUNT=$((RETRY_COUNT+1))
+            else
+              SUCCESS=1
+              break
+            fi
+          done
+          
+          # Exit with error if still unsuccessful after retries
+          if [ $SUCCESS -eq 0 ]; then
+            echo "Failed to install Go tip after $MAX_RETRIES attempts."
+            exit 1
+          fi
       - name: Zip Go installation
         run: |
           set -x
