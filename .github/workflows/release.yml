@@ -47,7 +47,7 @@ jobs:
           
             # We still want to see the output as part of the job output
             echo "$OUTPUT"
-            
+          
             # Check if the error "exit status 1" is present in the output
             if echo "$OUTPUT" | grep -q "exit status 1"; then
               echo "Detected 'exit status 1' error, retrying... ($((RETRY_COUNT+1))/$MAX_RETRIES)"
@@ -120,13 +120,13 @@ jobs:
         with:
           name: go-zip-${{ matrix.platform }}
       - name: Release
-        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
+        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
-          draft: false
-          prerelease: false
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: go.zip
           token: "${{ secrets.GITHUB_TOKEN }}"
-          tag_name: "${{ matrix.platform }}"
-          files: go.zip
+          tag: "${{ matrix.platform }}"
 
   slack:
     runs-on: ubuntu-latest
