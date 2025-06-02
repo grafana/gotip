@@ -14,14 +14,14 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ ubuntu-22.04, ubuntu-latest, windows-latest, windows-2019, macos-latest ]
+        platform: [ ubuntu-22.04, ubuntu-latest, windows-latest, windows-2022, macos-latest ]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Install zip
-        if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2019'
+        if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2022'
         run: powershell.exe -Command "choco install zip"
       - name: Remove the default Go installation
-        if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2019'
+        if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2022'
         shell: pwsh
         run: |
           $go_path = (Get-Command go).Source
@@ -80,7 +80,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ ubuntu-22.04,  ubuntu-latest, windows-latest, windows-2019, macos-latest ]
+        platform: [ ubuntu-22.04,  ubuntu-latest, windows-latest, windows-2022, macos-latest ]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Download Go tip artifact
@@ -112,7 +112,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ ubuntu-22.04,  ubuntu-latest, windows-latest, windows-2019, macos-latest ]
+        platform: [ ubuntu-22.04,  ubuntu-latest, windows-latest, windows-2022, macos-latest ]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Download Go tip artifact
