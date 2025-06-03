@@ -2,7 +2,7 @@ name: Test
 
 on:
   workflow_dispatch:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers] The artifact origin is hard-coded, and repo's full name checked.
     workflows: [ "Release" ]
     types:
       - completed
@@ -29,7 +29,7 @@ jobs:
         run: |
           gh release download ${{ matrix.platform }} --repo grafana/gotip --pattern 'go.zip'
       - name: Install Go tip
-        run: |
+        run: | # zizmor: ignore[github-env] Only uses $HOME, and the artifact is from the repo hard-coded above.
           set -x
           unzip go.zip -d $HOME/sdk
           echo "GOROOT=$HOME/sdk/gotip" >> "$GITHUB_ENV"
