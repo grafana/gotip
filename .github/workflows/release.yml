@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '0 */6 * * *'
 
+permissions:
+  contents: read
+
 defaults:
   run:
     shell: bash
@@ -20,13 +23,6 @@ jobs:
       - name: Install zip
         if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2022'
         run: powershell.exe -Command "choco install zip"
-      - name: Remove the default Go installation
-        if: matrix.platform == 'windows-latest' || matrix.platform == 'windows-2022'
-        shell: pwsh
-        run: |
-          $go_path = (Get-Command go).Source
-          Write-Host "Removing Go executable from: $go_path"
-          Remove-Item -Force $go_path
       - name: Install Go
         uses: actions/setup-go@v5
         with:
@@ -102,7 +98,7 @@ jobs:
           which go
           go_version_output=$(go version)
           echo "$go_version_output"
-          if ! echo "$go_version_output" | grep -q "go version devel"; then
+          if ! echo "$go_version_output" | grep -qE 'go[0-9.]+-devel'; then
             echo "Go version is not devel"
             exit 1
           fi
@@ -114,6 +110,8 @@ jobs:
       matrix:
         platform: [ ubuntu-22.04,  ubuntu-latest, windows-latest, windows-2022, macos-latest ]
     runs-on: ${{ matrix.platform }}
+    permissions:
+      contents: write
     steps:
       - name: Download Go tip artifact
         uses: actions/download-artifact@v4
