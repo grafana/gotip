@@ -43,7 +43,7 @@ jobs:
           which go
           go_version_output=$(go version)
           echo "$go_version_output"
-          if ! echo "$go_version_output" | grep -q "go version devel"; then
+          if ! echo "$go_version_output" | grep -qE 'go[0-9.]+-devel'; then
             echo "Go version is not devel"
             exit 1
           fi
