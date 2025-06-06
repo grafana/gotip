@@ -110,6 +110,8 @@ jobs:
       matrix:
         platform: [ ubuntu-22.04,  ubuntu-latest, windows-latest, windows-2022, macos-latest ]
     runs-on: ${{ matrix.platform }}
+    permissions:
+      contents: write
     steps:
       - name: Download Go tip artifact
         uses: actions/download-artifact@v4
