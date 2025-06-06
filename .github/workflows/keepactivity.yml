@@ -38,9 +38,10 @@ jobs:
         run: |
           set x
           git commit --allow-empty -m "Chore: Keep it active"
+      - name: Set authenticated remote URL
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
       - name: Push empty commit
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set x
           git push origin HEAD
