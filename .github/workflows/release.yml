@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ ubuntu-22.04, ubuntu-latest, windows-latest, windows-2022, macos-latest ]
+        platform: [ ubuntu-22.04, ubuntu-24.04-arm, ubuntu-latest, windows-latest, windows-2022, macos-latest ]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Install zip
@@ -76,7 +76,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ ubuntu-22.04,  ubuntu-latest, windows-latest, windows-2022, macos-latest ]
+        platform: [ ubuntu-22.04, ubuntu-24.04-arm, ubuntu-latest, windows-latest, windows-2022, macos-latest ]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Download Go tip artifact
@@ -108,7 +108,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [ ubuntu-22.04,  ubuntu-latest, windows-latest, windows-2022, macos-latest ]
+        platform: [ ubuntu-22.04, ubuntu-24.04-arm, ubuntu-latest, windows-latest, windows-2022, macos-latest ]
     runs-on: ${{ matrix.platform }}
     permissions:
       contents: write
